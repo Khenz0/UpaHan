@@ -1,2 +1,2 @@
-## SmartRent (Project Upahan)
-#### SMARTRENT: STREAMLINING BOARDING HOUSE PAYMENT MANAGEMENT SYSTEM
+# SmartRent (Project Upahan)
+#### Streamlining Boarding House Payment System
