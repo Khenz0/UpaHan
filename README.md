@@ -9,4 +9,4 @@
 * Lorem ipsum
 
 Important Links:
-*
+* Design Specs: 
