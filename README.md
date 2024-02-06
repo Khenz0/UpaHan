@@ -4,3 +4,9 @@
 | Internal Release Code | Version | Date Released |
 | --- | --- | --- |
 | PU.010.000 | v1.0.0 | In Development |
+
+## PU.010.001 Release Notes
+* Lorem ipsum
+
+Important Links:
+*
