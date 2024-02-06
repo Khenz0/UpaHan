@@ -9,4 +9,4 @@
 * Lorem ipsum
 
 Important Links:
-* Design Specs: 
+* Design Specs: https://github.com/Khenz0/upa-han
