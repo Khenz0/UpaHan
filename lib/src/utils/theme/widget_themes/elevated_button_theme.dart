@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../constants/colors.dart';
-import '../../../constants/sizes.dart';
+
+import '../../design/colors.dart';
+import '../../design/sizes.dart';
+
 
 class TElevatedButtonTheme {
   TElevatedButtonTheme._();

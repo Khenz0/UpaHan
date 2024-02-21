@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/constants/colors.dart';
-import 'package:smartrent_upahan/src/constants/sizes.dart';
+
+import '../../design/colors.dart';
+import '../../design/sizes.dart';
 
 class TOutlinedButtonTheme {
   TOutlinedButtonTheme._();

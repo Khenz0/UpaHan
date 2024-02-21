@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smartrent_upahan/src/constants/images.dart';
-import 'package:smartrent_upahan/src/constants/sizes.dart';
-import 'package:smartrent_upahan/src/constants/text_strings.dart';
-import 'package:smartrent_upahan/src/features/authentication/screens/signup/signup_screen.dart';
+
+import '../../components/main_components/signup_page.dart';
+import '../../utils/design/images.dart';
+import '../../utils/design/sizes.dart';
+import '../../utils/design/text_strings.dart';
 
 class LoginFooterWidget extends StatelessWidget {
   const LoginFooterWidget({
@@ -29,7 +30,7 @@ class LoginFooterWidget extends StatelessWidget {
         ),
         const SizedBox(height: tFormHeight - 20),
         TextButton(
-          onPressed: () => Get.to(() => const SignUpScreen()),
+          onPressed: () => Get.to(() => const SignUpPage()),
           child: Text.rich(
             TextSpan(
                 text: tDontHaveAnAccount,

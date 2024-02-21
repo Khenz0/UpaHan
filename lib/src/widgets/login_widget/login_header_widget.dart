@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/constants/images.dart';
-import 'package:smartrent_upahan/src/constants/text_strings.dart';
+import '../../utils/design/images.dart';
+import '../../utils/design/text_strings.dart';
 
 class LoginHeaderWidget extends StatelessWidget {
   const LoginHeaderWidget({Key ? key}) : super(key: key);

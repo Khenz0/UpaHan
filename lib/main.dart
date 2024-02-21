@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smartrent_upahan/src/features/authentication/screens/welcome/welcome_screen.dart';
+import 'package:smartrent_upahan/src/components/main_components/homepage.dart';
 import 'package:smartrent_upahan/src/utils/theme/theme.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const WelcomeScreen(),
+      home: const HomePage(),
     );
   }
 }

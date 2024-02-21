@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/constants/sizes.dart';
-import 'package:smartrent_upahan/src/constants/text_strings.dart';
+
+import '../../utils/design/sizes.dart';
+import '../../utils/design/text_strings.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({

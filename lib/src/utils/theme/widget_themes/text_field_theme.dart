@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/constants/colors.dart';
+import '../../design/colors.dart';
 
 class TTextFormFieldTheme {
   TTextFormFieldTheme._();
