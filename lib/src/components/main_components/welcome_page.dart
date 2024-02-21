@@ -7,8 +7,8 @@ import '../../utils/design/text_strings.dart';
 import 'login_page.dart';
 
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
