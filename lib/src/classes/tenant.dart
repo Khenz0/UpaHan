@@ -6,9 +6,9 @@ class Tenant extends PersonalUser{
   int status;
   DateTime startDate;
   DateTime currentDate;
-  List<TenantPayment> tenantPayment;
+  List<TenantPayment>? tenantPayment;
 
-  Tenant({required id, required name, required contactInfo,required email, required password, required this.status, required this.startDate, required this.currentDate, required this.tenantPayment}) : super (id: id, name: name, contactInfo: contactInfo, email: email, password: password);
+  Tenant({id, required name, required contactInfo,required email, required password, required this.status, required this.startDate, required this.currentDate, this.tenantPayment}) : super (id: id, name: name, contactInfo: contactInfo, email: email, password: password);
 
 
   void updateStatusAndDate() {
@@ -35,14 +35,14 @@ class Tenant extends PersonalUser{
     return daysRemaining <= 0;
   }
 
-  void changeStatusWhenPaidAndNotPaid(){
-    if(isPaymentDue() && (status == 1 || status == 2)){
-      for (var payment in tenantPayment) {
-        payment.isPayed = 0;
-      }
-      status = 3;
-    }
-  }
+  // void changeStatusWhenPaidAndNotPaid(){
+  //   if(isPaymentDue() && (status == 1 || status == 2)){
+  //     for (var payment in tenantPayment) {
+  //       payment.isPayed = 0;
+  //     }
+  //     status = 3;
+  //   }
+  // }
 
 
 }
