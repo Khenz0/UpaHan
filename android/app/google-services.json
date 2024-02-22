@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1041788318836",
+    "project_id": "upahanfinaldb",
+    "storage_bucket": "upahanfinaldb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041788318836:android:c9df5b05fefec068f48d21",
+        "android_client_info": {
+          "package_name": "com.example.smartrent_upahan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByEwH9vl9CBK_rqD-pH9HIcSCMkh0mtRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
