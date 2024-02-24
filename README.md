@@ -4,10 +4,14 @@
 | Internal Release Code | Version | Date Released |
 | --- | --- | --- |
 | PU.010.000 | v1.0.0 | 02 - 17 - 24 |
+| PU.010.001 | v1.0.0 | 02 - 24 - 24 |
 
 ## PU.010.000 Release Notes
 * UI for Login and Sign Up Functions
 * Set up for  database using Firebase
+## PU.010.001 Release Notes
+* Login and Sign Up Authentication
+* Data can now be stored in Firebase 
 
 Important Links:
 * Design Specs: https://github.com/Khenz0/upa-han
