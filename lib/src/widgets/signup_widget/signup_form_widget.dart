@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smartrent_upahan/src/components/main_components/login_page.dart';
 import '../../classes/tenant.dart';
 import '../../components/main_components/homepage.dart';
 import '../../database/firebase_db.dart';
@@ -46,6 +47,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           children: [
             TextFormField(
               controller: _usernameController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 label: Text(tFullName),
                 suffixIcon: Icon(Icons.person_outline_rounded),
@@ -56,6 +64,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
             TextFormField(
               controller: _contactinfoController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please enter a contact number';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 label: Text(tPhoneNo),
                 suffixIcon: Icon(Icons.phone_outlined),
@@ -66,6 +81,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
             TextFormField(
               controller: _emailController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please enter an email';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 label: Text(tEmailAdd),
                 suffixIcon: Icon(Icons.email_outlined),
@@ -76,6 +98,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
             TextFormField(
               controller: _passwordController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please enter a password';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 label: Text(tPassword),
                 suffixIcon: Icon(Icons.password_outlined),
@@ -86,6 +115,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
             TextFormField(
               controller: _confirmpasswordController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please confirm password';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 label: Text(tConfirmPassword),
                 suffixIcon: Icon(Icons.confirmation_number_outlined),
@@ -100,26 +136,37 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                 onPressed: () async {
                   String name = "", contactInfo = "", email = "", password = "";
 
-                  if(_formkey.currentState!.validate()){
+                  if(_formkey.currentState!.validate()) {
                     setState(() {
                       name = _usernameController.text;
                       contactInfo = _contactinfoController.text;
                       email = _emailController.text;
                       password = _passwordController.text;
                     });
+                  }
 
-                    Tenant tenant = Tenant(
-                        name: name,
-                        contactInfo: contactInfo,
-                        email: email,
-                        password: password,
-                        status: 1,
-                        startDate: DateTime.now(),
-                        currentDate: DateTime.now()
-                    );
+                  if(name != "" && contactInfo != "" && email != "" && password != ""){
+                      Tenant tenant = Tenant(
+                          name: name,
+                          contactInfo: contactInfo,
+                          email: email,
+                          password: password,
+                          status: 1,
+                          startDate: DateTime.now(),
+                          currentDate: DateTime.now()
+                      );
 
-                    print(tenant);
-                    tenant.signUp();
+                      print(tenant);
+
+                      if(await tenant.signUp(context)){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return const LoginPage();
+                              }),
+                        );
+                      }
                   }
                 },
                 child: Text(tSignup.toUpperCase()),

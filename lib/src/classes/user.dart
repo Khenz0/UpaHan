@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import '../database/firebase_db.dart';
 
 class PersonalUser{
@@ -20,21 +21,20 @@ class PersonalUser{
       return true;
     }
     else{
-      print("Some error occured");
       return false;
     }
   }
 
-  void signUp() async{
-    User? user = await firebaseDB.signUpWithEmailAndPassword(email, password);
+  Future<bool> signUp(BuildContext context) async{
+    User? user = await firebaseDB.signUpWithEmailAndPassword(email, password, context);
 
     if(user != null){
       print("Account Created.");
-      //return true;
+      return true;
     }
     else{
       print("Some error occured");
-      //return false;
+      return false;
     }
   }
 

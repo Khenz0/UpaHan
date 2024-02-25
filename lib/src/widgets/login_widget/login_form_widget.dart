@@ -30,14 +30,22 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      child: Form(
+        key: _formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
               controller: _emailController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value){
+                if (value!.isEmpty) {
+                  return 'Please enter an email';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person_outline_outlined),
                   labelText: tEmail,
@@ -48,7 +56,14 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(height: tFormHeight - 20),
             TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value){
+                  if (value!.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.password),
                     labelText: tPassword,
                     hintText: tPassword,
@@ -68,31 +83,46 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () async {
                   String email = "", password = "";
 
-                  setState(() {
-                    email = _emailController.text;
-                    password = _passwordController.text;
-                  });
-                  Tenant tenant = Tenant(
-                      name: 'Michael Cye R. Salem',
-                      contactInfo: '09978601212',
-                      email: email,
-                      password: password,
-                      status: 1,
-                      startDate: DateTime.now(),
-                      currentDate: DateTime.now()
-                  );
-
-                  if (await tenant.login()){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) {
-                        return const HomePage(title: 'Smart Rent');
-                      }),
-                    );
+                  if(_formkey.currentState!.validate()){
+                    setState(() {
+                      email = _emailController.text;
+                      password = _passwordController.text;
+                    });
                   }
 
-                  //tenant.login();
+                  if(email != "" && password != ""){
+                    Tenant tenant = Tenant(
+                        name: 'Michael Cye R. Salem',
+                        contactInfo: '09978601212',
+                        email: email,
+                        password: password,
+                        status: 1,
+                        startDate: DateTime.now(),
+                        currentDate: DateTime.now()
+                    );
+
+                    if (await tenant.login()){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) {
+                              return const HomePage(title: 'Smart Rent');
+                            }),
+                      );
+                    }
+                    else{
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                "Invalid email or password",
+                                style: TextStyle(
+                                    fontSize: 10.0
+                                ),
+                              )
+                          )
+                      );
+                    }
+                  }
                 },
                 child: Text(tLogin.toUpperCase()
                 ),

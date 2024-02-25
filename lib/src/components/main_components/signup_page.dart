@@ -5,11 +5,17 @@ import '../../utils/design/sizes.dart';
 import '../../utils/design/text_strings.dart';
 import '../../widgets/form_widget/form_header_widget.dart';
 import '../../widgets/signup_widget/signup_form_widget.dart';
+import 'login_page.dart';
 
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +45,15 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return const LoginPage();
+                              }),
+                        );
+                      },
                       child: Text.rich(
                         TextSpan(
                           children: [

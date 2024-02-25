@@ -4,9 +4,14 @@ import '../../widgets/login_widget/login_footer_widget.dart';
 import '../../widgets/login_widget/login_form_widget.dart';
 import '../../widgets/login_widget/login_header_widget.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
