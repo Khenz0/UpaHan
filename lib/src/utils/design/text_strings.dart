@@ -37,15 +37,15 @@ const String tWelcomeSubTitle = "Streamlining Boarding House Payment System";
 
 
 // -- Login Screen Text
-const String tLoginTitle = "Welcome Back!";
-const String tLoginSubTitle = "Make sure to keep track on your payments!";
+const String tLoginTitle = "SmartRent";
+const String tLoginSubTitle = "A Boarding House Management App";
 const String tRememberMe = "Remember Me?";
 const String tDontHaveAnAccount = "Don't have an Account? ";
 
 
 // -- Sign Up Screen Text
 const String tSignUpTitle = "Get On Board!";
-const String tSignUpSubTitle = "Create your profile to start your Journey.";
+const String tSignUpSubTitle = "Create your profile to get started. You will be able to manage your boarding house payments easily.";
 const String tAlreadyHaveAnAccount = "Already have an Account? ";
 
 

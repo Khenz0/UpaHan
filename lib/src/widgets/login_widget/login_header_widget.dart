@@ -11,9 +11,16 @@ class LoginHeaderWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Image(
-          image: AssetImage(tWelcomeScreenImage),
-          height: size.height * 0.2,),
+        Center(
+          child: Column(
+            children: [
+              Image(
+                image: AssetImage(tWelcomeScreenImage), 
+                height: size.height * 0.2,
+                ),
+            ],
+          ),
+        ),
         Text(tLoginTitle, style: Theme
             .of(context)
             .textTheme

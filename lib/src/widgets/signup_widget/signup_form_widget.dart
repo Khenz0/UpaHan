@@ -36,6 +36,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     super.dispose();
   }
 
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,36 +100,57 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             const SizedBox(height: tFormHeight - 20),
 
             TextFormField(
-              controller: _passwordController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
-                if (value!.isEmpty) {
-                  return 'Please enter a password';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                label: Text(tPassword),
-                suffixIcon: Icon(Icons.password_outlined),
+            controller: _passwordController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value){
+              if (value!.isEmpty) {
+                return 'Please enter a password';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: tPassword,
+              suffixIcon: InkWell(
+                onTap: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+                child: Icon(
+                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                ),
               ),
             ),
+            obscureText: _obscurePassword, // Toggle the visibility of the entered text
+          ),
+
 
             const SizedBox(height: tFormHeight - 20),
 
             TextFormField(
-              controller: _confirmpasswordController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
-                if (value!.isEmpty) {
-                  return 'Please confirm password';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                label: Text(tConfirmPassword),
-                suffixIcon: Icon(Icons.confirmation_number_outlined),
+            controller: _confirmpasswordController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value){
+              if (value!.isEmpty) {
+                return 'Please confirm password';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: tConfirmPassword,
+              suffixIcon: InkWell(
+                onTap: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+                child: Icon(
+                  _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                ),
               ),
             ),
+            obscureText: _obscureConfirmPassword, // Toggle the visibility of the entered text
+          ),
 
             const SizedBox(height: tFormHeight - 20),
 

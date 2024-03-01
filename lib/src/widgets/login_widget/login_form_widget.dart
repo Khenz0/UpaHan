@@ -15,14 +15,16 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-
   final _formkey = GlobalKey<FormState>();
 
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController= TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  // Declare variables here
+  bool _obscurePassword = true;
 
   @override
-  void dispose(){
+  void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -40,42 +42,56 @@ class _LoginFormState extends State<LoginForm> {
             TextFormField(
               controller: _emailController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
+              validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter an email';
                 }
                 return null;
               },
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person_outline_outlined),
-                  labelText: tEmail,
-                  hintText: tEmail,
-                  border: OutlineInputBorder()
+                prefixIcon: Icon(Icons.person_outline_outlined),
+                labelText: tEmail,
+                hintText: tEmail,
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: tFormHeight - 20),
             TextFormField(
-                controller: _passwordController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value){
-                  if (value!.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.password),
-                    labelText: tPassword,
-                    hintText: tPassword,
-                    border: OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      onPressed: null,
-                      icon: Icon(Icons.remove_red_eye_sharp),
-                    )
-                )
+              controller: _passwordController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a password';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.password),
+                labelText: tPassword,
+                hintText: tPassword,
+                border: OutlineInputBorder(),
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                  child: Icon(
+                    _obscurePassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                ),
+              ),
+              obscureText: _obscurePassword,
             ),
             const SizedBox(height: tFormHeight - 20),
-            Align(alignment: Alignment.centerRight,child: TextButton(onPressed: () {}, child: Text(tForgetPassword))
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {},
+                child: Text(tForgetPassword),
+              ),
             ),
             SizedBox(
               width: double.infinity,
@@ -83,51 +99,50 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () async {
                   String email = "", password = "";
 
-                  if(_formkey.currentState!.validate()){
+                  if (_formkey.currentState!.validate()) {
                     setState(() {
                       email = _emailController.text;
                       password = _passwordController.text;
                     });
                   }
 
-                  if(email != "" && password != ""){
+                  if (email != "" && password != "") {
                     Tenant tenant = Tenant(
-                        name: 'Michael Cye R. Salem',
-                        contactInfo: '09978601212',
-                        email: email,
-                        password: password,
-                        status: 1,
-                        startDate: DateTime.now(),
-                        currentDate: DateTime.now()
+                      name: 'Michael Cye R. Salem',
+                      contactInfo: '09978601212',
+                      email: email,
+                      password: password,
+                      status: 1,
+                      startDate: DateTime.now(),
+                      currentDate: DateTime.now(),
                     );
 
-                    if (await tenant.login()){
+                    if (await tenant.login()) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) {
-                              return const HomePage(title: 'Smart Rent');
-                            }),
+                          builder: (context) {
+                            return const HomePage(title: 'Smart Rent');
+                          },
+                        ),
                       );
-                    }
-                    else{
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                "Invalid email or password",
-                                style: TextStyle(
-                                    fontSize: 10.0
-                                ),
-                              )
-                          )
+                        const SnackBar(
+                          content: Text(
+                            "Invalid email or password",
+                            style: TextStyle(fontSize: 10.0),
+                          ),
+                        ),
                       );
                     }
                   }
                 },
-                child: Text(tLogin.toUpperCase()
+                child: Text(
+                  tLogin.toUpperCase(),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
