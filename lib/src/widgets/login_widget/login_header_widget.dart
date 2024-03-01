@@ -11,6 +11,7 @@ class LoginHeaderWidget extends StatelessWidget {
 
     return Column(
       children: [
+        const SizedBox(height: 80),
         Center(
           child: Column(
             children: [

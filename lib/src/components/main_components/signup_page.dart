@@ -18,58 +18,159 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var height = mediaQuery.size.height;
+
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(tDefaultSize),
-          child: Column(
-            children: [
-              FormHeaderWidget(
-                image: tWelcomeScreenImage,
-                title: tSignUpTitle,
-                subTitle: tSignUpSubTitle,
+        child: Stack(
+          children: [
+            // Cloud shape at the top
+            Positioned(
+              top: -40,
+              left: -160,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
               ),
-              SignUpFormWidget(),
-              Column(
-                children: [
-                  const Text("OR"),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Image(
-                        image: AssetImage(tGoogleLogoImage),
-                        width: 20.0,
-                      ),
-                      label: Text(tSignInWithGoogle.toUpperCase()),
-                    ),
+            ),
+            Positioned(
+              top: -120,
+              left: -50,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
+              ),
+            ),
+            Positioned(
+              top: -100,
+              left: -150,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
+              ),
+            ),
+            Positioned(
+              top: -100,
+              left: 50,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
+              ),
+            ),
+            Positioned(
+              top: -50,
+              left: 170,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
+              ),
+            ),
+            Positioned(
+              top: -40,
+              left: -260,
+              child: Container(
+                width: MediaQuery.of(context).size.width + 100,
+                height: height * 0.3,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.lightBlue[200],
+                ),
+              ),
+            ),
+
+            // Cloud shape at the bottom
+            Positioned(
+              bottom: -150,
+              right: -50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(150.0),
+                  topRight: Radius.circular(150.0),
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width + 100,
+                  height: height * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue[200],
                   ),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }),
-                        );
-                      },
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: tAlreadyHaveAnAccount,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            TextSpan(text: tLogin.toUpperCase()),
-                          ]
+                ),
+              ),
+            ),
+
+            Container(
+              padding: const EdgeInsets.all(tDefaultSize),
+              child: Column(
+                children: [
+                  FormHeaderWidget(
+                    image: tWelcomeScreenImage,
+                    title: tSignUpTitle,
+                    subTitle: tSignUpSubTitle,
+                  ),
+                  SignUpFormWidget(),
+                  Column(
+                    children: [
+                      const Text("OR"),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Image(
+                            image: AssetImage(tGoogleLogoImage),
+                            width: 20.0,
+                          ),
+                          label: Text(tSignInWithGoogle.toUpperCase()),
                         ),
                       ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const LoginPage();
+                              },
+                            ),
+                          );
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: tAlreadyHaveAnAccount,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              TextSpan(text: tLogin.toUpperCase()),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

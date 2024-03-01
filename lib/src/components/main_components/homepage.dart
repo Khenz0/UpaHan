@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome to the SmartRent',
+              'Welcome to the SmartRent Application!',
             ),
           ],
         ),
