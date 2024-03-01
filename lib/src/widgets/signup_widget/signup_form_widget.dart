@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartrent_upahan/src/components/main_components/login_page.dart';
 import '../../classes/tenant.dart';
@@ -17,27 +16,28 @@ class SignUpFormWidget extends StatefulWidget {
 }
 
 class _SignUpFormWidgetState extends State<SignUpFormWidget> {
-
   final _formkey = GlobalKey<FormState>();
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _contactinfoController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController= TextEditingController();
-  TextEditingController _confirmpasswordController= TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  String _selectedRole = 'Tenant'; // Default role is Tenant
 
   @override
-  void dispose(){
+  void dispose() {
     _usernameController.dispose();
     _contactinfoController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmpasswordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
-
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -48,109 +48,27 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
-              controller: _usernameController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
-                if (value!.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
+            DropdownButtonFormField<String>(
+              value: _selectedRole,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedRole = newValue!;
+                });
               },
-              decoration: InputDecoration(
-                label: Text(tFullName),
-                suffixIcon: Icon(Icons.person_outline_rounded),
-              ),
+              items: <String>['Tenant', 'Landlord'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
 
             const SizedBox(height: tFormHeight - 20),
 
-            TextFormField(
-              controller: _contactinfoController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
-                if (value!.isEmpty) {
-                  return 'Please enter a contact number';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                label: Text(tPhoneNo),
-                suffixIcon: Icon(Icons.phone_outlined),
-              ),
-            ),
-
-            const SizedBox(height: tFormHeight - 20),
-
-            TextFormField(
-              controller: _emailController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value){
-                if (value!.isEmpty) {
-                  return 'Please enter an email';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                label: Text(tEmailAdd),
-                suffixIcon: Icon(Icons.email_outlined),
-              ),
-            ),
-
-            const SizedBox(height: tFormHeight - 20),
-
-            TextFormField(
-            controller: _passwordController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value){
-              if (value!.isEmpty) {
-                return 'Please enter a password';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              labelText: tPassword,
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-                child: Icon(
-                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                ),
-              ),
-            ),
-            obscureText: _obscurePassword, // Toggle the visibility of the entered text
-          ),
-
-
-            const SizedBox(height: tFormHeight - 20),
-
-            TextFormField(
-            controller: _confirmpasswordController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value){
-              if (value!.isEmpty) {
-                return 'Please confirm password';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              labelText: tConfirmPassword,
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-                child: Icon(
-                  _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                ),
-              ),
-            ),
-            obscureText: _obscureConfirmPassword, // Toggle the visibility of the entered text
-          ),
+            if (_selectedRole == 'Tenant')
+              _buildTenantFields(),
+            if (_selectedRole == 'Landlord')
+              _buildLandlordFields(),
 
             const SizedBox(height: tFormHeight - 20),
 
@@ -158,39 +76,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  String name = "", contactInfo = "", email = "", password = "";
-
-                  if(_formkey.currentState!.validate()) {
-                    setState(() {
-                      name = _usernameController.text;
-                      contactInfo = _contactinfoController.text;
-                      email = _emailController.text;
-                      password = _passwordController.text;
-                    });
-                  }
-
-                  if(name != "" && contactInfo != "" && email != "" && password != ""){
-                      Tenant tenant = Tenant(
-                          name: name,
-                          contactInfo: contactInfo,
-                          email: email,
-                          password: password,
-                          status: 1,
-                          startDate: DateTime.now(),
-                          currentDate: DateTime.now()
-                      );
-
-                      print(tenant);
-
-                      if(await tenant.signUp(context)){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }),
-                        );
-                      }
+                  if (_formkey.currentState!.validate()) {
+                    // Perform sign up based on selected role
+                    if (_selectedRole == 'Tenant') {
+                      // Sign up logic for Tenant
+                    } else if (_selectedRole == 'Landlord') {
+                      // Sign up logic for Landlord
+                    }
                   }
                 },
                 child: Text(tSignup.toUpperCase()),
@@ -199,6 +91,222 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTenantFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: _usernameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter a name';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text('Tenant Full Name'),
+            suffixIcon: Icon(Icons.person_outline_rounded),
+          ),
+        ),
+        const SizedBox(height: tFormHeight - 20),
+        // Add other tenant-specific text form fields here
+        TextFormField(
+          controller: _contactinfoController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter a contact number';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text(tPhoneNo),
+            suffixIcon: Icon(Icons.phone_outlined),
+          ),
+        ),
+        const SizedBox(height: tFormHeight - 20),
+        TextFormField(
+          controller: _emailController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter an email';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text(tEmailAdd),
+            suffixIcon: Icon(Icons.email_outlined),
+          ),
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _passwordController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter a password';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: tPassword,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+              child: Icon(
+                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              ),
+            ),
+          ),
+          obscureText: _obscurePassword, // Toggle the visibility of the entered text
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _confirmPasswordController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please confirm password';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: tConfirmPassword,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                });
+              },
+              child: Icon(
+                _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+              ),
+            ),
+          ),
+          obscureText: _obscureConfirmPassword, // Toggle the visibility of the entered text
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+      ],
+    );
+  }
+
+  Widget _buildLandlordFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: _usernameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter a name';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text('Landlord Full Name'),
+            suffixIcon: Icon(Icons.person_outline_rounded),
+          ),
+        ),
+        const SizedBox(height: tFormHeight - 20),
+        // Add other landlord-specific text form fields here
+        TextFormField(
+          controller: _contactinfoController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter a contact number';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text(tPhoneNo),
+            suffixIcon: Icon(Icons.phone_outlined),
+          ),
+        ),
+        const SizedBox(height: tFormHeight - 20),
+        TextFormField(
+          controller: _emailController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter an email';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text(tEmailAdd),
+            suffixIcon: Icon(Icons.email_outlined),
+          ),
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _passwordController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please enter a password';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: tPassword,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+              child: Icon(
+                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              ),
+            ),
+          ),
+          obscureText: _obscurePassword, // Toggle the visibility of the entered text
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _confirmPasswordController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value){
+            if (value!.isEmpty) {
+              return 'Please confirm password';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: tConfirmPassword,
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                });
+              },
+              child: Icon(
+                _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+              ),
+            ),
+          ),
+          obscureText: _obscureConfirmPassword, // Toggle the visibility of the entered text
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+      ],
     );
   }
 }
