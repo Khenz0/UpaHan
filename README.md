@@ -13,7 +13,7 @@
 ## PU.010.001 Release Notes
 * Login and Sign Up Authentication
 * Data can now be stored in Firebase
-## PU.010.001 Release Notes
+## PU.010.002 Release Notes
 * User Authentication constraints (authentication if a user is a tenant or landlord).
 * Password hide/show feature
 * UI design changes
