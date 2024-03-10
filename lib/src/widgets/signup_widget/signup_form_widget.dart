@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/components/main_components/login_page.dart';
-import '../../classes/tenant.dart';
-import '../../components/main_components/homepage.dart';
+import '../../components/sub_components/loading_popup.dart'; // Import the loading popup file
 import '../../database/firebase_db.dart';
 import '../../utils/design/sizes.dart';
 import '../../utils/design/text_strings.dart';
 
 class SignUpFormWidget extends StatefulWidget {
   const SignUpFormWidget({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SignUpFormWidget> createState() => _SignUpFormWidgetState();
 }
 
 class _SignUpFormWidgetState extends State<SignUpFormWidget> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _contactinfoController = TextEditingController();
@@ -28,6 +26,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   bool _obscureConfirmPassword = true;
 
   String _selectedRole = 'Tenant'; // Default role is Tenant
+
+  bool _isLoading = false; // Track loading state
 
   @override
   void dispose() {
@@ -42,9 +42,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: tFormHeight - 10),
+      padding: EdgeInsets.symmetric(vertical: tFormHeight - 10),
       child: Form(
-        key: _formkey,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,16 +75,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  if (_formkey.currentState!.validate()) {
-                    // Perform sign up based on selected role
-                    if (_selectedRole == 'Tenant') {
-                      // Sign up logic for Tenant
-                    } else if (_selectedRole == 'Landlord') {
-                      // Sign up logic for Landlord
-                    }
-                  }
-                },
+                onPressed: _isLoading ? null : _submitForm,
                 child: Text(tSignup.toUpperCase()),
               ),
             ),
@@ -92,6 +83,28 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         ),
       ),
     );
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true; // Set loading state to true
+      });
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return LoadingPopup(); // Show loading popup
+        },
+      );
+
+      // Your signup logic here
+
+      setState(() {
+        _isLoading = false; // Set loading state to false
+      });
+      Navigator.pop(context); // Close loading popup
+    }
   }
 
   Widget _buildTenantFields() {
@@ -116,7 +129,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _contactinfoController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter a contact number';
             }
@@ -131,7 +144,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _emailController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter an email';
             }
@@ -148,7 +161,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _passwordController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter a password';
             }
@@ -175,7 +188,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _confirmPasswordController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please confirm password';
             }
@@ -224,7 +237,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _contactinfoController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter a contact number';
             }
@@ -239,7 +252,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _emailController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter an email';
             }
@@ -256,7 +269,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _passwordController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter a password';
             }
@@ -283,7 +296,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         TextFormField(
           controller: _confirmPasswordController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value){
+          validator: (value) {
             if (value!.isEmpty) {
               return 'Please confirm password';
             }

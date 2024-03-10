@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:smartrent_upahan/src/classes/tenant.dart';
-import 'package:smartrent_upahan/src/components/main_components/homepage.dart';
-
-import '../../utils/design/sizes.dart';
-import '../../utils/design/text_strings.dart';
+import 'package:smartrent_upahan/src/components/main_components/main_tab_view.dart';
+import 'package:smartrent_upahan/src/utils/design/sizes.dart';
+import 'package:smartrent_upahan/src/utils/design/text_strings.dart';
+import '../../components/sub_components/loading_popup.dart'; // Import the loading popup file
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  // Declare variables here
   bool _obscurePassword = true;
+  bool _isLoading = false; // Track loading state
 
   @override
   void dispose() {
@@ -35,7 +35,7 @@ class _LoginFormState extends State<LoginForm> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Form(
-        key: _formkey,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,17 +96,23 @@ class _LoginFormState extends State<LoginForm> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  String email = "", password = "";
-
-                  if (_formkey.currentState!.validate()) {
+                onPressed: _isLoading ? null : () async { // Disable button while loading
+                  if (_formKey.currentState!.validate()) {
                     setState(() {
-                      email = _emailController.text;
-                      password = _passwordController.text;
+                      _isLoading = true; // Set loading state to true
                     });
-                  }
+                    // Show loading popup
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return LoadingPopup();
+                      },
+                    );
 
-                  if (email != "" && password != "") {
+                    String email = _emailController.text;
+                    String password = _passwordController.text;
+
                     Tenant tenant = Tenant(
                       name: 'Michael Cye R. Salem',
                       contactInfo: '09978601212',
@@ -118,29 +124,31 @@ class _LoginFormState extends State<LoginForm> {
                     );
 
                     if (await tenant.login()) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return const HomePage(title: 'Smart Rent');
+                            return MainTabView();
                           },
                         ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
                             "Invalid email or password",
                             style: TextStyle(fontSize: 10.0),
                           ),
                         ),
                       );
+                      setState(() {
+                        _isLoading = false; // Set loading state to false
+                      });
+                      Navigator.pop(context); // Close loading popup
                     }
                   }
                 },
-                child: Text(
-                  tLogin.toUpperCase(),
-                ),
+                child: _isLoading ? CircularProgressIndicator() : Text(tLogin.toUpperCase()), // Display loading indicator if loading
               ),
             ),
           ],
