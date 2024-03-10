@@ -18,7 +18,7 @@
 * User Authentication constraints (authentication if a user is a tenant or landlord).
 * Password hide/show feature
 * UI design changes
-##PU.010.003 Release Notes
+## PU.010.003 Release Notes
 * Google Signin 
 * Generate database for tenant, landlord, property, and payment
 * Added some constraints on login and sign up if a user is a tenant or landlord
