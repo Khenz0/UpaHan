@@ -37,7 +37,20 @@ class LoginFooterWidget extends StatelessWidget {
         ),
         const SizedBox(height: tFormHeight - 20),
         TextButton(
-          onPressed: () => Get.to(() => const SignUpPage()),
+          onPressed: () async {
+            if (!await FirebaseDB.isNetworkAvailable()) {
+              FirebaseDB.showNoInternetError(context);
+            } else{
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const SignUpPage();
+                  },
+                ),
+              );
+            }
+          },
           child: Text.rich(
             TextSpan(
                 text: tDontHaveAnAccount,

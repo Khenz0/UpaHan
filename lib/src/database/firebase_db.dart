@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,11 +113,45 @@ class FirebaseDB {
     return snapshot.docs.isNotEmpty; // True if any documents are found, false otherwise
   }
 
-  void signInWithGoogle(BuildContext context) async {
+  static Future<bool> isNetworkAvailable() async {
     try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty;
+    } on SocketException catch (e) {
+      return false;
+    }
+  }
+
+  static void showNoInternetError(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Network Error'),
+          content: Text(
+              'Please check your internet connection and try again.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void signInWithGoogle(BuildContext context) async {
+    // Check internet connectivity before proceeding
+    if (!await isNetworkAvailable()) {
+      showNoInternetError(context);
+      return; // Exit the function if no internet
+    }
+
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      UserCredential credential = await _auth.signInWithProvider(
-          googleAuthProvider);
+      UserCredential credential = await _auth.signInWithProvider(googleAuthProvider);
 
       // Check if the user already exists in your database
       bool userExists = await _checkIfUserExists(credential.user!.email);
@@ -127,7 +162,7 @@ class FirebaseDB {
         final email = credential.user!.email;
 
         // User exists, navigate to homepage
-        if(await FirebaseDB.loginAccount(email!) == 0){
+        if (await FirebaseDB.loginAccount(email!) == 0) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -136,8 +171,8 @@ class FirebaseDB {
               },
             ),
           );
-        } else if(await FirebaseDB.loginAccount(email) == 1){
-          Navigator.push(
+        } else if (await FirebaseDB.loginAccount(email) == 1) {
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) {
@@ -146,50 +181,16 @@ class FirebaseDB {
             ),
           );
         }
-
       } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return SignUpFormGoogle(userEmail: credential.user!.email,);
+              return SignUpFormGoogle(userEmail: credential.user!.email);
             },
           ),
         );
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text(
-                  "Account already in use",
-                  style: TextStyle(
-                      fontSize: 10.0
-                  ),
-                )
-            )
-        );
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Network Error'),
-            content: Text(
-                'Please check your internet connection and try again.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   static Future<int?> loginAccount(String emailInputted) async {

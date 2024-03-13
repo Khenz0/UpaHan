@@ -107,49 +107,50 @@ class _LoginFormState extends State<LoginForm> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  String email = "", password = "";
+                  if (!await FirebaseDB.isNetworkAvailable()) {
+                    FirebaseDB.showNoInternetError(context);
+                  } else{
+                    String email = "", password = "";
 
-                  if (_formkey.currentState!.validate()) {
-                    setState(() {
-                      email = _emailController.text;
-                      password = _passwordController.text;
-                    });
+                    if (_formkey.currentState!.validate()) {
+                      setState(() {
+                        email = _emailController.text;
+                        password = _passwordController.text;
+                      });
 
 
-                    if (await FirebaseDB.loginAccount(email) == 0) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const TenantHomePage();
-                          },
-                        ),
-                      );
-                    }
-                    else if(await FirebaseDB.loginAccount(email) == 1){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const LandlordMainTabView();
-                          },
-                        ),
-                      );
-                    }
-                    else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Invalid email or password",
-                            style: TextStyle(fontSize: 10.0),
+                      if (await FirebaseDB.loginAccount(email) == 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const TenantHomePage();
+                            },
                           ),
-                        ),
-                      );
+                        );
+                      }
+                      else if(await FirebaseDB.loginAccount(email) == 1){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const LandlordMainTabView();
+                            },
+                          ),
+                        );
+                      }
+                      else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Invalid email or password",
+                              style: TextStyle(fontSize: 10.0),
+                            ),
+                          ),
+                        );
+                      }
                     }
-                  }
-
-
-                  },
+                  }},
                 child: Text(
                   tLogin.toUpperCase(),
                 ),

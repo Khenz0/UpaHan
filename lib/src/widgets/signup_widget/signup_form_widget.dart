@@ -87,26 +87,29 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  String name = "", contactInfo = "", email = "", password = "", confPass = "", startDate = "", propertyName = "", propertyAdd = "";
-                  EmailNumberIndicator emailIndicator = EmailNumberIndicator(email: "", userIndicator: -1);
+                  if (!await FirebaseDB.isNetworkAvailable()) {
+                    FirebaseDB.showNoInternetError(context);
+                  }else{
+                    String name = "", contactInfo = "", email = "", password = "", confPass = "", startDate = "", propertyName = "", propertyAdd = "";
+                    EmailNumberIndicator emailIndicator = EmailNumberIndicator(email: "", userIndicator: -1);
 
-                  if (_formkey.currentState!.validate()) {
-                    setState(() {
-                      name = _usernameController.text;
-                      contactInfo = _contactinfoController.text;
-                      email = _emailController.text;
-                      password = _passwordController.text;
-                      confPass = _confirmPasswordController.text;
+                    if (_formkey.currentState!.validate()) {
+                      setState(() {
+                        name = _usernameController.text;
+                        contactInfo = _contactinfoController.text;
+                        email = _emailController.text;
+                        password = _passwordController.text;
+                        confPass = _confirmPasswordController.text;
 
-                      if(_selectedRole == 'Landlord'){
-                        propertyName = _propertyNameController.text;
-                        propertyAdd = _propertyAddressController.text;
-                      }
+                        if(_selectedRole == 'Landlord'){
+                          propertyName = _propertyNameController.text;
+                          propertyAdd = _propertyAddressController.text;
+                        }
 
-                    });
-                    // Perform sign up based on selected role
-                    if (_selectedRole == 'Tenant') {
-                      Tenant tenant = Tenant(
+                      });
+                      // Perform sign up based on selected role
+                      if (_selectedRole == 'Tenant') {
+                        Tenant tenant = Tenant(
                           name: name,
                           contactInfo: contactInfo,
                           email: email,
@@ -115,41 +118,42 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                           status: 3,
                           startDate: DateTime.now(),
                           currentDate: DateTime.now(),
-                      );
-
-                      if (await tenant.signUp(context)){
-                        tenant.createTenantData(emailIndicator);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }),
                         );
-                      }
-                    } else if (_selectedRole == 'Landlord') {
-                      Property property = Property(propertyName: propertyName, address: propertyAdd);
 
-                      Landlord landlord = Landlord(
-                          name: name,
-                          contactInfo: contactInfo,
-                          email: email,
-                          password: password,
-                          property: property
-                      );
+                        if (await tenant.signUp(context)){
+                          tenant.createTenantData(emailIndicator);
 
-                      if (await landlord.signUp(context)){
-                        //property.createPropertyData();
-                        landlord.createLandlordData(emailIndicator);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) {
+                                  return const LoginPage();
+                                }),
+                          );
+                        }
+                      } else if (_selectedRole == 'Landlord') {
+                        Property property = Property(propertyName: propertyName, address: propertyAdd);
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }),
+                        Landlord landlord = Landlord(
+                            name: name,
+                            contactInfo: contactInfo,
+                            email: email,
+                            password: password,
+                            property: property
                         );
+
+                        if (await landlord.signUp(context)){
+                          //property.createPropertyData();
+                          landlord.createLandlordData(emailIndicator);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) {
+                                  return const LoginPage();
+                                }),
+                          );
+                        }
                       }
                     }
                   }
@@ -177,15 +181,19 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const LoginPage();
-                        },
-                      ),
-                    );
+                  onPressed: () async {
+                    if (!await FirebaseDB.isNetworkAvailable()) {
+                    FirebaseDB.showNoInternetError(context);
+                    }else{
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const LoginPage();
+                          },
+                        ),
+                      );
+                    }
                   },
                   child: Text.rich(
                     TextSpan(
