@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smartrent_upahan/src/database/firebase_db.dart';
 
+import '../../classes/tenant.dart';
+import '../../components/main_components/homepage_tenant.dart';
 import '../../components/main_components/signup_page.dart';
 import '../../utils/design/images.dart';
 import '../../utils/design/sizes.dart';
 import '../../utils/design/text_strings.dart';
 
 class LoginFooterWidget extends StatelessWidget {
-  const LoginFooterWidget({
+  LoginFooterWidget({
     super.key,
   });
+
+  FirebaseDB firebase = FirebaseDB();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,9 @@ class LoginFooterWidget extends StatelessWidget {
                 image: AssetImage(tGoogleLogoImage),
                 width: 30.0,
               ),
-              onPressed: () {},
+              onPressed: () {
+                firebase.signInWithGoogle(context);
+              },
               label: Text(tSignInWithGoogle)),
         ),
         const SizedBox(height: tFormHeight - 20),

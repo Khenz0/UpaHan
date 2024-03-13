@@ -13,10 +13,11 @@ void main() async{
         apiKey: 'AIzaSyByEwH9vl9CBK_rqD-pH9HIcSCMkh0mtRs',
         appId: '1:1041788318836:android:c9df5b05fefec068f48d21',
         messagingSenderId: '1041788318836',
-        projectId: 'upahanfinaldb'
+        projectId: 'upahanfinaldb',
+        authDomain: 'upahanfinaldb.firebaseapp.com',
     )
   );
-
+  
   runApp(const MyApp());
 }
 

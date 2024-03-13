@@ -1,9 +1,9 @@
 abstract class Payment{
 
-  int? id;
+  int? paymentId;
   String paymentName;
   int amount;
 
-  Payment({this.id, required this.paymentName, required this.amount});
+  Payment({this.paymentId, required this.paymentName, required this.amount});
 
 }

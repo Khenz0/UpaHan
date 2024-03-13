@@ -6,6 +6,7 @@ const String tLogin = "Login";
 const String tEmail = "Phone or Email Address";
 const String tEmailAdd = "Email Address";
 const String tSignup = "Signup";
+const String tCreateAcc = "Create Account";
 const String tPhoneNo = "Phone No.";
 const String tPassword = "Password";
 const String tConfirmPassword = "Confirm Password";
@@ -45,7 +46,8 @@ const String tDontHaveAnAccount = "Don't have an Account? ";
 
 // -- Sign Up Screen Text
 const String tSignUpTitle = "Get On Board!";
-const String tSignUpSubTitle = "Create your profile to get started. You will be able to manage your boarding house payments easily.";
+const String tSignUpSubTitle1 = "Create your profile to get started. You will be able to manage your boarding house payments easily.";
+const String tSignUpSubTitle2 = "Tell us a bit about yourself.";
 const String tAlreadyHaveAnAccount = "Already have an Account? ";
 
 

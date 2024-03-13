@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smartrent_upahan/src/classes/tenant.dart';
-import 'package:smartrent_upahan/src/components/main_components/homepage.dart';
+import 'package:smartrent_upahan/src/classes/emailNum_indicator.dart';
+import 'package:smartrent_upahan/src/classes/user.dart';
+import 'package:smartrent_upahan/src/components/main_components/homepage_landlord.dart';
+import 'package:smartrent_upahan/src/components/main_components/homepage_tenant.dart';
+import 'package:smartrent_upahan/src/components/main_components/landlord_maintabview.dart';
 
+import '../../database/firebase_db.dart';
 import '../../utils/design/sizes.dart';
 import '../../utils/design/text_strings.dart';
+
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -16,12 +23,15 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formkey = GlobalKey<FormState>();
+  final FirebaseDB firebaseDB = FirebaseDB();
+  EmailNumberIndicator? emNumInd;
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   // Declare variables here
   bool _obscurePassword = true;
+
 
   @override
   void dispose() {
@@ -104,29 +114,29 @@ class _LoginFormState extends State<LoginForm> {
                       email = _emailController.text;
                       password = _passwordController.text;
                     });
-                  }
 
-                  if (email != "" && password != "") {
-                    Tenant tenant = Tenant(
-                      name: 'Michael Cye R. Salem',
-                      contactInfo: '09978601212',
-                      email: email,
-                      password: password,
-                      status: 1,
-                      startDate: DateTime.now(),
-                      currentDate: DateTime.now(),
-                    );
 
-                    if (await tenant.login()) {
+                    if (await FirebaseDB.loginAccount(email) == 0) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return const HomePage(title: 'Smart Rent');
+                            return const TenantHomePage();
                           },
                         ),
                       );
-                    } else {
+                    }
+                    else if(await FirebaseDB.loginAccount(email) == 1){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const LandlordMainTabView();
+                          },
+                        ),
+                      );
+                    }
+                    else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -137,7 +147,9 @@ class _LoginFormState extends State<LoginForm> {
                       );
                     }
                   }
-                },
+
+
+                  },
                 child: Text(
                   tLogin.toUpperCase(),
                 ),

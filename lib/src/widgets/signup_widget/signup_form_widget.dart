@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:smartrent_upahan/src/classes/emailNum_indicator.dart';
+import 'package:smartrent_upahan/src/classes/landlord.dart';
+import 'package:smartrent_upahan/src/classes/property.dart';
+import 'package:smartrent_upahan/src/classes/tenant.dart';
+import 'package:smartrent_upahan/src/classes/user.dart';
 import 'package:smartrent_upahan/src/components/main_components/login_page.dart';
-import '../../classes/tenant.dart';
-import '../../components/main_components/homepage.dart';
 import '../../database/firebase_db.dart';
+import '../../utils/design/images.dart';
 import '../../utils/design/sizes.dart';
 import '../../utils/design/text_strings.dart';
 
@@ -16,6 +20,8 @@ class SignUpFormWidget extends StatefulWidget {
 }
 
 class _SignUpFormWidgetState extends State<SignUpFormWidget> {
+
+  FirebaseDB firebase = FirebaseDB();
   final _formkey = GlobalKey<FormState>();
 
   TextEditingController _usernameController = TextEditingController();
@@ -23,6 +29,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+
+  TextEditingController _propertyNameController = TextEditingController();
+  TextEditingController _propertyAddressController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -36,6 +45,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _propertyNameController.dispose();
+    _propertyAddressController.dispose();
     super.dispose();
   }
 
@@ -76,17 +87,121 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  String name = "", contactInfo = "", email = "", password = "", confPass = "", startDate = "", propertyName = "", propertyAdd = "";
+                  EmailNumberIndicator emailIndicator = EmailNumberIndicator(email: "", userIndicator: -1);
+
                   if (_formkey.currentState!.validate()) {
+                    setState(() {
+                      name = _usernameController.text;
+                      contactInfo = _contactinfoController.text;
+                      email = _emailController.text;
+                      password = _passwordController.text;
+                      confPass = _confirmPasswordController.text;
+
+                      if(_selectedRole == 'Landlord'){
+                        propertyName = _propertyNameController.text;
+                        propertyAdd = _propertyAddressController.text;
+                      }
+
+                    });
                     // Perform sign up based on selected role
                     if (_selectedRole == 'Tenant') {
-                      // Sign up logic for Tenant
+                      Tenant tenant = Tenant(
+                          name: name,
+                          contactInfo: contactInfo,
+                          email: email,
+                          password: password,
+                          boardingHouse: "",
+                          status: 3,
+                          startDate: DateTime.now(),
+                          currentDate: DateTime.now(),
+                      );
+
+                      if (await tenant.signUp(context)){
+                        tenant.createTenantData(emailIndicator);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return const LoginPage();
+                              }),
+                        );
+                      }
                     } else if (_selectedRole == 'Landlord') {
-                      // Sign up logic for Landlord
+                      Property property = Property(propertyName: propertyName, address: propertyAdd);
+
+                      Landlord landlord = Landlord(
+                          name: name,
+                          contactInfo: contactInfo,
+                          email: email,
+                          password: password,
+                          property: property
+                      );
+
+                      if (await landlord.signUp(context)){
+                        //property.createPropertyData();
+                        landlord.createLandlordData(emailIndicator);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return const LoginPage();
+                              }),
+                        );
+                      }
                     }
                   }
                 },
                 child: Text(tSignup.toUpperCase()),
               ),
+            ),
+            const SizedBox(height: tFormHeight - 20),
+
+            Column(
+              children: [
+                const Text("OR"),
+                const SizedBox(height: tFormHeight - 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      firebase.signInWithGoogle(context);
+                    },
+                    icon: const Image(
+                      image: AssetImage(tGoogleLogoImage),
+                      width: 20.0,
+                    ),
+                    label: Text(tSignInWithGoogle.toUpperCase()),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const LoginPage();
+                        },
+                      ),
+                    );
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: tAlreadyHaveAnAccount,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        TextSpan(text: tLogin.toUpperCase()),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 50),
+              ],
             ),
           ],
         ),
@@ -127,7 +242,10 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             suffixIcon: Icon(Icons.phone_outlined),
           ),
         ),
+
         const SizedBox(height: tFormHeight - 20),
+
+        // will be automatic since google sign in
         TextFormField(
           controller: _emailController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -198,6 +316,9 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         ),
 
         const SizedBox(height: tFormHeight - 20),
+
+
+
       ],
     );
   }
@@ -236,6 +357,40 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           ),
         ),
         const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _propertyNameController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter boarding house name';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text('Boarding House Name'),
+            suffixIcon: Icon(Icons.person_outline_rounded),
+          ),
+        ),
+
+        const SizedBox(height: tFormHeight - 20),
+
+        TextFormField(
+          controller: _propertyAddressController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter boarding house address';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            label: Text('Boarding House Address'),
+            suffixIcon: Icon(Icons.person_outline_rounded),
+          ),
+        ),
+        const SizedBox(height: tFormHeight - 20),
+
         TextFormField(
           controller: _emailController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
