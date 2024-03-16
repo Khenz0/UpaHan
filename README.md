@@ -7,6 +7,7 @@
 | PU.010.001 | v1.0.0 | 02 - 24 - 24 |
 | PU.010.002 | v1.0.0 | 03 - 02 - 24 |
 | PU.010.003 | v1.0.0 | 03 - 10 - 24 |
+| PU.010.004 | v1.0.0 | 03 - 16 - 24 |
 
 ## PU.010.000 Release Notes
 * UI for Login and Sign Up Functions
@@ -23,6 +24,12 @@
 * Generate database for tenant, landlord, property, and payment
 * Added some constraints on login and sign up if a user is a tenant or landlord
 * UI for Tenant Management (Tenant, Landlord)
+
+## PU.010.004 Release Notes
+* Can now log in as tenant or landlord. If login as landlord, the homepage for landlord will show, if tenant, the tenant homepage will show.
+* Google Sign-in also functions already.
+* UI Integration.
+* Landlord and Tenant UI, Dashboard UI, Settings UI and Add Payment UI
 
 Important Links:
 * Design Specs: https://github.com/Khenz0/upa-han
